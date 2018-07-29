@@ -44,3 +44,14 @@ app.set("port", process.env.PORT || 3001);
 const server = app.listen(app.get("port"), () => {
   console.log(`Express running → PORT ${server.address().port}`);
 });
+
+process.on('unhandledRejection', (req, res, reason, p) => {
+  console.log('process');
+  console.error(reason, 'Unhandled Rejection at Promise', p);
+});
+
+process.on('uncaughtException', (err) => {
+  console.log('process');
+  console.error(err, 'Uncaught Exception thrown');
+  // process.exit(1);
+});
