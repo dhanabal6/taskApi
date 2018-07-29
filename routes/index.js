@@ -5,14 +5,15 @@ const nodemailer = require("nodemailer");
 const fs = require('fs');
 
 const User = require("../models/user");
+var dir = "./public/upload";
+if (!fs.existsSync(dir)){
+fs.mkdirSync(dir);
+}
+
 
 const Storage = multer.diskStorage({
   destination: function(req, file, callback) {
-    var dir = "./public/upload"
-    if (!fs.existsSync(dir)){
-    fs.mkdirSync(dir);
-    }
-    callback(null, dir);
+    callback(null, "./public/upload");
   },
   filename: function(req, file, callback) {
     var filename = Date.now().toString() + "_" + file.originalname;
