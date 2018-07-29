@@ -2,12 +2,17 @@ const express = require("express");
 const router = express.Router();
 const multer = require("multer");
 const nodemailer = require("nodemailer");
+const fs = require('fs');
 
 const User = require("../models/user");
 
 const Storage = multer.diskStorage({
   destination: function(req, file, callback) {
-    callback(null, "./public/upload/documents");
+    var dir = "./public/upload"
+    if (!fs.existsSync(dir)){
+    fs.mkdirSync(dir);
+    }
+    callback(null, dir);
   },
   filename: function(req, file, callback) {
     var filename = Date.now().toString() + "_" + file.originalname;
@@ -53,6 +58,7 @@ router.post("/upload/:userId", (req, res) => {
   upload(req, res, err => {
     if (err) return res.status(500).send({ msg: err });
     const bodyData = req.body;
+    console.log(bodyData);
     let files;
     req.files.forEach(val => {
       files = val;
@@ -62,6 +68,7 @@ router.post("/upload/:userId", (req, res) => {
       (err, data) => {
         if (err) return res.status(500).send({ msg: err });
         let user2Data = data;
+        console.log(user2Data);
         User.findById(req.params.userId, (err, value) => {
           if (err) return res.status(500).send({ msg: err });
           const user1Data = value;
